@@ -105,9 +105,9 @@ final class Melementor_Extension
 
         $message = sprintf(
             /* translators: 1: Plugin name 2: PHP 3: Required PHP version */
-            esc_html__('"%1$s" requires "%2$s" version %3$s or greater.', 'elementor-test-extension'),
-            '<strong>' . esc_html__('Elementor Test Extension', 'elementor-test-extension') . '</strong>',
-            '<strong>' . esc_html__('PHP', 'elementor-test-extension') . '</strong>',
+            esc_html__('"%1$s" requires "%2$s" version %3$s or greater.', 'melementor'),
+            '<strong>' . esc_html__('Melementor', 'melementor') . '</strong>',
+            '<strong>' . esc_html__('PHP', 'melementor') . '</strong>',
             self::MINIMUM_PHP_VERSION
         );
 
@@ -119,6 +119,18 @@ final class Melementor_Extension
         $this->i18n();
 
         add_action('elementor/widgets/widgets_registered', [$this, 'init_widgets']);
+        function add_elementor_widget_categories($elements_manager)
+        {
+
+            $elements_manager->add_category(
+                'melementor',
+                [
+                    'title' => __('Melementor', 'melementor'),
+                    'icon' => 'fa fa-plug',
+                ]
+            );
+        }
+        add_action('elementor/elements/categories_registered', 'add_elementor_widget_categories');
     }
     public function init_widgets()
     {
@@ -131,6 +143,8 @@ final class Melementor_Extension
         \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Melementor_text_Widget());
         \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Melementor_oEmbed_Widget());
     }
+
+
     public function includes()
     {
     }

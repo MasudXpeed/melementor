@@ -18,7 +18,7 @@ class Melementor_text_Widget extends \Elementor\Widget_Base
 
     public function get_categories()
     {
-        return ['basic'];
+        return ['melementor'];
     }
 
     /*     
