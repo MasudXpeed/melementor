@@ -118,8 +118,18 @@ final class Melementor_Extension
 
         $this->i18n();
 
-        // Plugin logic here...
+        add_action('elementor/widgets/widgets_registered', [$this, 'init_widgets']);
+    }
+    public function init_widgets()
+    {
 
+        // Include Widget files
+        require_once(__DIR__ . '/widgets/text-widget.php');
+        require_once(__DIR__ . '/widgets/oembed-widget.php');
+
+        // Register widget
+        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Melementor_text_Widget());
+        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Melementor_oEmbed_Widget());
     }
     public function includes()
     {
