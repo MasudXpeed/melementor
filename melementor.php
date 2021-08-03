@@ -136,12 +136,12 @@ final class Melementor_Extension
     {
 
         // Include Widget files
-        require_once(__DIR__ . '/widgets/text-widget.php');
-        require_once(__DIR__ . '/widgets/oembed-widget.php');
+        require_once(__DIR__ . '/widgets/section-title.php');
+        require_once(__DIR__ . '/widgets/posts-widget.php');
 
         // Register widget
-        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Melementor_text_Widget());
-        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Melementor_oEmbed_Widget());
+        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Melementor_Section_title_Widget());
+        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Melementor_Posts_Widget());
     }
 
 
