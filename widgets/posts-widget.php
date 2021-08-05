@@ -52,6 +52,38 @@ class Melementor_Posts_Widget extends \Elementor\Widget_Base
                 'responsive'    => false
             ]
         );
+        $this->add_control(
+            'column_class',
+            [
+                'label' => esc_html__('Posts Column', 'bascart'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default'   => (isset($default['column']) ? esc_attr($default['column']) : 'col-md-6 col-lg-2'),
+                'options'   => [
+                    'col-md-6 col-lg-12' => 'Column 1',
+                    'col-md-6 col-lg-6' => 'Column 2',
+                    'col-md-6 col-lg-4' => 'Column 3',
+                    'col-md-6 col-lg-3' => 'Column 4',
+                    'col-md-6 col-lg-2' => 'Column 6',
+                ]
+            ]
+        );
+        $this->add_control(
+            'divider',
+            [
+                'type' => \Elementor\Controls_Manager::DIVIDER,
+            ]
+        );
+        $this->add_control(
+            'hide_post_title',
+            [
+                'label' => __('Show post title', 'melementor'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __('Show', 'melementor'),
+                'label_off' => __('Hide', 'melementor'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+            ]
+        );
         $this->end_controls_section();
         $this->start_controls_section(
             'style_section',
@@ -102,6 +134,7 @@ class Melementor_Posts_Widget extends \Elementor\Widget_Base
     {
         $settings = $this->get_settings_for_display();
         $posts_per_page = $settings['posts_per_page'];
+        $hide_post_title = $settings['hide_post_title'];
         $args = array(
             'post_type' => 'post',
             'posts_per_page' => $posts_per_page
@@ -114,9 +147,22 @@ class Melementor_Posts_Widget extends \Elementor\Widget_Base
 
                 <!-- the loop -->
                 <?php while ($query->have_posts()) : $query->the_post(); ?>
-                    <div class="single-post">
-                        <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail('large'); ?></a>
-                        <h4 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
+                    <?php
+                    $column_class = !empty($settings['column_class']) ? $settings['column_class'] : 'col-md-4'; ?>
+                    <div class="<?php echo esc_attr($column_class); ?>">
+                        <div class="single-post">
+                            <div class="post-thumbnail-wrapper">
+                                <a href="<?php the_permalink(); ?>"><?php the_post_thumbnail('large'); ?></a>
+                            </div>
+                            <div class="post-content">
+
+                                <?php if ('yes' === $hide_post_title) : ?>
+                                    <h4 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
+                                <?php endif; ?>
+                                <?php the_excerpt(); ?>
+
+                            </div>
+                        </div>
                     </div>
                 <?php endwhile; ?>
                 <!-- end of the loop -->
