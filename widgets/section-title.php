@@ -92,6 +92,26 @@ class Melementor_Section_title_Widget extends \Elementor\Widget_Base
                 ]
             ]
         );
+        $this-> add_control(
+            'section_gallery',
+            [
+                'label' => __('Section Gallery', 'melementor'),
+                'type' => \Elementor\Controls_Manager::GALLERY,
+            
+            ]
+        );
+
+        $this-> add_control(
+            'section_icon',
+            [
+                'label' => __('Section Icon', 'melementor'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'default' => [
+					'value' => 'fas fa-star',
+					'library' => 'solid',
+				],
+			]
+        );
         $this->end_controls_section();
 
         $this->start_controls_section(
@@ -101,7 +121,7 @@ class Melementor_Section_title_Widget extends \Elementor\Widget_Base
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
-        $this->add_control(
+        $this->add_responsive_control(
             'text_align',
             [
                 'label' => __('Alignment', 'melementor'),
@@ -195,19 +215,57 @@ class Melementor_Section_title_Widget extends \Elementor\Widget_Base
             ],
         ]);
         $this->end_controls_section();
+        $this->start_controls_section(
+            'icon_settings',
+            [
+                'label' => __('Section Icon', 'melementor'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+        $this->add_responsive_control(
+            'icon_size', [
+            'label' => __('Icon Size', 'melementor'),
+            'type' => \Elementor\Controls_Manager::SLIDER,
+            'size_units' => [ 'px', '%' ],
+            'range' => [
+                'px' => [
+                    'min' => 10,
+                    'max' => 300,
+                    'step' => 5,
+                ],
+                '%' => [
+                    'min' => 0,
+                    'max' => 100,
+                ],
+            ],
+            'default' => [
+                'unit' => 'px',
+                'size' => 14,
+            ],
+            'selectors' => [
+                '{{WRAPPER}} .section-icon' => 'font-size: {{SIZE}}{{UNIT}}',
+            ],
+        ]);
+        $this->end_controls_section();
     }
 
     protected function render()
     {
         $settings = $this->get_settings_for_display();
-
+        $select_contry = $settings['select_contry'];
         $heading = $settings['heading'];
         $description = $settings['description'];
         $show_title = $settings['show_title'];
         $show_description = $settings['show_description'];
+        $section_gallery = $settings['section_gallery'];
 ?>
         <div class="section-title-wrapper">
-            <img src="<?php // echo $settings['section_image']['url']; ?>" alt="">
+            <div class="section-icon">
+                <?php \Elementor\Icons_Manager::render_icon( $settings['section_icon'], [ 'aria-hidden' => 'true' ] ); ?>
+            </div>
+            <!-- 
+                <img src="<?php // echo $settings['section_image']['url']; ?>" alt="">
+             -->
             <?php // echo wp_get_attachment_image($settings['section_image']['id'], 'large') ; ?>
 
             <?php echo \Elementor\Group_Control_Image_Size::get_attachment_image_html($settings, 'image_size', 'section_image'); ?>
@@ -219,12 +277,13 @@ class Melementor_Section_title_Widget extends \Elementor\Widget_Base
                 <p class="section-description"><?php echo esc_html($description); ?></p>
             <?php endif; ?>
             <ul class="list-unstyled">
-                <?php foreach($settings['select_contry'] as $value) : ?>
-                    <li><?php echo esc_html($value); ?>
-                </li>
+               
+            </ul>            
+            <ul class="gallery-images">
+                <?php foreach($section_gallery as $gallery_image): ?>
+                 <li><?php  echo wp_get_attachment_image($gallery_image['id'], 'medium');; ?></li>
                 <?php endforeach; ?>
             </ul>
-            
             
         </div>
     <?php
@@ -234,6 +293,21 @@ class Melementor_Section_title_Widget extends \Elementor\Widget_Base
     {
     ?>
         <div class="section-title-wrapper">
+            <# const iconHTML = elementor.helpers.renderIcon( view, settings.section_icon, { 'aria-hidden': true }, 'i' , 'object' ); #>
+
+            <div class="my-icon-wrapper">
+                {{{ iconHTML.value }}}
+            </div>
+            <ul class="gallery-images">
+                <#
+                    for(value of settings.section_gallery) {
+                        #>
+                        <img src="{{{value.url}}}" alt="">
+                        <#
+                    }
+                #>
+              
+            </div>
             <#
                 var imageObj = {
                     id:settings.section_image.id,
@@ -252,7 +326,7 @@ class Melementor_Section_title_Widget extends \Elementor\Widget_Base
                         <# } #>
                 <ul>
                     <#
-                        for (const value of settings.select_contry) {
+                        for (let value of settings.select_contry) {
                             #>
                             <li>{{{value}}}</li>
                             <#
