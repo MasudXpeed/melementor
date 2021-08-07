@@ -166,9 +166,6 @@ class Melementor_Posts_Widget extends \Elementor\Widget_Base
                     </div>
                 <?php endwhile; ?>
                 <!-- end of the loop -->
-
-                <!-- pagination here -->
-
                 <?php wp_reset_postdata(); ?>
 
             <?php else : ?>
